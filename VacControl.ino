@@ -13,9 +13,7 @@ int adc_key_in  = 0;
 #define btnSELECT 4
 #define btnNONE   5
 
-bool started = false;
-
-//Internal for Vacuum / Venting
+//Interval for Vacuum / Venting
 int intervalVac =  600000;
 int intervalATM =  600000 * 6;
 unsigned long nextSwitchTime = 0;
@@ -23,6 +21,7 @@ unsigned long startTime = 0;
 
 //Setup Status
 bool sucking = false;
+bool started = false;
 
 void setup()
 {
@@ -42,7 +41,7 @@ void loop()
 //Internal Functiouns
 /////////////////////
 
-void getInputNumeric(){
+void getInput(){
   lcd.setCursor(0,1);
   lcd_key = read_LCD_buttons();
 
