@@ -3,7 +3,7 @@
 //Pins used on the LCD panel
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
-// define some values used by the panel and buttons
+//Vales used by the LCD
 int lcd_key     = 0;
 int adc_key_in  = 0;
 #define btnRIGHT  0
@@ -20,27 +20,28 @@ unsigned long nextSwitchTime = 0;
 unsigned long startTime = 0;
 
 //Setup Status
-bool sucking = false;
+bool vac = false;
 bool started = false;
 
 void setup()
 {
-  lcd.begin(16, 2);              // Start the library
+  // Start the library
+  lcd.begin(16, 2);
 }
 
 void loop()
 {
+  //Check if trigger point has been reached
   if ((started) && (millis() > nextSwitchTime)) {
     toggleStates();
   }
+  //Process any user interaction
   getInput();
+  //Render the screen
   redraw();
 }
 
-
-//Internal Functiouns
-/////////////////////
-
+//Get user keypresses
 void getInput(){
   lcd.setCursor(0,1);
   lcd_key = read_LCD_buttons();
@@ -82,31 +83,31 @@ void getInput(){
 }
 
 
-
-
+//Render the screen
 void redraw(){
   unsigned long currentTimeSeconds = 0;
-  if (started) {
+  //If the timer has not yet started, leave the counter at 0
+  if (started)
     currentTimeSeconds = ((millis() - startTime) / 1000);
-  }
-  else {
-    currentTimeSeconds = 0;
-  }
 
-  lcd.setCursor(0,0);            // Move cursor to line 1, char 1
+  //Draw upper line
+  lcd.setCursor(0,0);
   lcd.print("VAC  ATM  TIME");
 
   //Draw Vac Time
   lcd.setCursor(0,1);
   lcd.print(intervalVac);
+
   //Draw ATM Time
   lcd.setCursor(5,1);
   lcd.print(intervalATM);
 
+  //Draw timer
   lcd.setCursor(10,1);
   lcd.print(currentTimeSeconds);
 }
 
+//Start the sequence
 void start() {
   //Only Allow Starting Once
   if (started){
@@ -117,32 +118,39 @@ void start() {
   startTime = millis();
   nextSwitchTime = millis() + intervalVac;
 
-  startSucking();
+  startVac();
 
   started = true;
 }
 
+//Switch between vacuum and atmosphere
 void toggleStates(){
-  if (sucking){
-    stopSucking();
-    nextSwitchTime = millis() + intervalATM;
-  }
-  else {
-    startSucking();
-    nextSwitchTime = millis() + intervalVac;
-  }
+  if (vac)
+    stopVac();
+  else
+    startVac();
 }
 
-void startSucking(){
+//Activate pump, close valve
+void startVac(){
   //Switch on pump
+
   //Close valve
-  sucking = true;
+
+  //Set trigger point
+  nextSwitchTime = millis() + intervalVac;
+  vac = true;
 }
 
-void stopSucking(){
+//Deactivate pump, open valve
+void stopVac(){
   //Switch off pump
+
   //Open valve
-  sucking = false;
+
+  //Set trigger point
+  nextSwitchTime = millis() + intervalATM;
+  vac = false;
 }
 
 int read_LCD_buttons() {
