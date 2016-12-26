@@ -85,11 +85,12 @@ void getInput(){
 
 
 void redraw(){
+  unsigned long currentTimeSeconds = 0;
   if (started) {
-    unsigned long currentTimeSeconds = ((millis() - startTime) / 1000);
+    currentTimeSeconds = ((millis() - startTime) / 1000);
   }
   else {
-    unsigned long currentTimeSeconds = 0;
+    currentTimeSeconds = 0;
   }
 
   lcd.setCursor(0,0);            // Move cursor to line 1, char 1
