@@ -19,8 +19,8 @@ int adc_key_in  =        0;
 #define VALVE_OPEN       255
 #define VALVE_CLOSED     0
 
-#define PIN_VAC          83
-#define PIN_ATM          82
+/*#define PIN_VAC          A15
+#define PIN_ATM          A14*/
 
 //Interval for Vacuum / Venting
 int intervalVac =  10;
@@ -40,12 +40,12 @@ void setup()
   lcd.begin(16, 2);
 
   //Set up output pins
-  pinMode(PIN_VAC, OUTPUT);
-  pinMode(PIN_ATM, OUTPUT);
+  pinMode(A15, OUTPUT);
+  pinMode(A14, OUTPUT);
 
   //Atmospheric state
-  analogWrite(PIN_VAC, VAC_OFF);
-  analogWrite(PIN_ATM, VALVE_OPEN)
+  analogWrite(A15, VAC_OFF);
+  analogWrite(A14, VALVE_OPEN);
 }
 
 void loop()
@@ -193,10 +193,10 @@ void toggleStates(){
 //Activate pump, close valve
 void startVac(){
   //Close valve
-  analogWrite(PIN_ATM, VALVE_CLOSED);
+  analogWrite(A14, VALVE_CLOSED);
 
   //Switch on pump
-  analogWrite(PIN_VAC, VAC_ON);
+  analogWrite(A15, VAC_ON);
 
   //Set trigger point
   nextSwitchMillis = millis() + minToMillis(intervalVac);
@@ -209,10 +209,10 @@ void startVac(){
 //Deactivate pump, open valve
 void stopVac(){
   //Switch off pump
-  analogWrite(PIN_VAC, VAC_OFF);
+  analogWrite(A15, VAC_OFF);
 
   //Open valve
-  analogWrite(PIN_ATM, VALVE_OPEN);
+  analogWrite(A14, VALVE_OPEN);
 
   //Set trigger point
   nextSwitchMillis = millis() + minToMillis(intervalATM);
