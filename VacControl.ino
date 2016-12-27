@@ -88,8 +88,12 @@ void getInput(){
       buttonDown = false;
       break;
     }
+    default:
+    {
+      buttonDown = false;
+      break;
+    }
   }
-  buttonDown = false;
 }
 
 
