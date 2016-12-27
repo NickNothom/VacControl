@@ -14,14 +14,15 @@ int adc_key_in  = 0;
 #define btnNONE   5
 
 //Interval for Vacuum / Venting
-int intervalVac =  600000;
-int intervalATM =  600000 * 6;
-unsigned long nextSwitchTime = 0;
-unsigned long startTime = 0;
+int intervalVac =  10;
+int intervalATM =  60;
+unsigned long nextSwitchMillis = 0;
+unsigned long startMillis = 0;
 
 //Setup Status
 bool vac = false;
 bool started = false;
+bool buttonDown = false;
 
 void setup()
 {
@@ -32,9 +33,9 @@ void setup()
 void loop()
 {
   //Check if trigger point has been reached
-  if ((started) && (millis() > nextSwitchTime)) {
+  if ((started) && (millis() > nextSwitchMillis))
     toggleStates();
-  }
+    
   //Process any user interaction
   getInput();
   //Render the screen
@@ -43,6 +44,9 @@ void loop()
 
 //Get user keypresses
 void getInput(){
+  if (buttonDown)
+    return;
+  
   lcd.setCursor(0,1);
   lcd_key = read_LCD_buttons();
 
@@ -50,33 +54,39 @@ void getInput(){
   {
     case btnRIGHT:
     {
+      buttonDown = true;
       intervalATM++;
       break;
     }
     case btnLEFT:
     {
+      buttonDown = true;
       intervalATM--;
       break;
     }
     case btnUP:
     {
+      buttonDown = true;
       intervalVac++;
       break;
     }
     case btnDOWN:
     {
+      buttonDown = true;
       intervalVac--;
       break;
     }
     case btnSELECT:
     {
       //Start timer
+      buttonDown = true;
       start();
       break;
     }
 
     case btnNONE:
     {
+      buttonDown = false;
       break;
     }
   }
@@ -88,7 +98,7 @@ void redraw(){
   unsigned long currentTimeSeconds = 0;
   //If the timer has not yet started, leave the counter at 0
   if (started)
-    currentTimeSeconds = ((millis() - startTime) / 1000);
+    currentTimeSeconds = ((millis() - startMillis) / 1000);
 
   //Draw upper line
   lcd.setCursor(0,0);
@@ -115,8 +125,8 @@ void start() {
   }
 
   //Timing Setup
-  startTime = millis();
-  nextSwitchTime = millis() + intervalVac;
+  startMillis = millis();
+  nextSwitchMillis = millis() + secToMillis(intervalVac);
 
   startVac();
 
@@ -138,7 +148,7 @@ void startVac(){
   //Close valve
 
   //Set trigger point
-  nextSwitchTime = millis() + intervalVac;
+  nextSwitchMillis = millis() + secToMillis(intervalVac);
   vac = true;
 }
 
@@ -149,9 +159,13 @@ void stopVac(){
   //Open valve
 
   //Set trigger point
-  nextSwitchTime = millis() + intervalATM;
+  nextSwitchMillis = millis() + secToMillis(intervalATM);
   vac = false;
 }
+
+unsigned long secToMillis(unsigned long seconds){
+  return(seconds * 60000);
+}  
 
 int read_LCD_buttons() {
   adc_key_in = analogRead(0);
