@@ -19,7 +19,7 @@ int adc_key_in  =        0;
 #define VALVE_OPEN       255
 #define VALVE_CLOSED     0
 
-#define PIN_VAC          78
+#define PIN_VAC          83
 #define PIN_ATM          82
 
 //Interval for Vacuum / Venting
