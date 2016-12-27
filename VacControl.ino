@@ -126,7 +126,6 @@ void start() {
 
   //Timing Setup
   startMillis = millis();
-  nextSwitchMillis = millis() + secToMillis(intervalVac);
 
   startVac();
 
@@ -148,7 +147,7 @@ void startVac(){
   //Close valve
 
   //Set trigger point
-  nextSwitchMillis = millis() + secToMillis(intervalVac);
+  nextSwitchMillis = millis() + minToMillis(intervalVac);
   vac = true;
 }
 
@@ -159,12 +158,12 @@ void stopVac(){
   //Open valve
 
   //Set trigger point
-  nextSwitchMillis = millis() + secToMillis(intervalATM);
+  nextSwitchMillis = millis() + minToMillis(intervalATM);
   vac = false;
 }
 
-unsigned long secToMillis(unsigned long seconds){
-  return(seconds * 60000);
+unsigned long minToMillis(unsigned long minutes){
+  return(minutes * 60000);
 }
 
 int read_LCD_buttons() {
