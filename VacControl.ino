@@ -44,8 +44,6 @@ void loop()
 
 //Get user keypresses
 void getInput(){
-  if (buttonDown)
-    return;
 
   lcd.setCursor(0,1);
   lcd_key = read_LCD_buttons();
@@ -54,30 +52,45 @@ void getInput(){
   {
     case btnRIGHT:
     {
+      if (buttonDown)
+        return;
+
       buttonDown = true;
       intervalATM++;
       break;
     }
     case btnLEFT:
     {
+      if (buttonDown)
+        return;
+
       buttonDown = true;
       intervalATM--;
       break;
     }
     case btnUP:
     {
+      if (buttonDown)
+        return;
+
       buttonDown = true;
       intervalVac++;
       break;
     }
     case btnDOWN:
     {
+      if (buttonDown)
+        return;
+
       buttonDown = true;
       intervalVac--;
       break;
     }
     case btnSELECT:
     {
+      if (buttonDown)
+        return;
+
       //Start timer
       buttonDown = true;
       start();
