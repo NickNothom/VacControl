@@ -83,13 +83,13 @@ void getInput(){
       start();
       break;
     }
-
     case btnNONE:
     {
       buttonDown = false;
       break;
     }
   }
+  buttonDown = false;
 }
 
 
