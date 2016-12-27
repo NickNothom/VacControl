@@ -35,7 +35,7 @@ void loop()
   //Check if trigger point has been reached
   if ((started) && (millis() > nextSwitchMillis))
     toggleStates();
-    
+
   //Process any user interaction
   getInput();
   //Render the screen
@@ -46,7 +46,7 @@ void loop()
 void getInput(){
   if (buttonDown)
     return;
-  
+
   lcd.setCursor(0,1);
   lcd_key = read_LCD_buttons();
 
@@ -165,7 +165,7 @@ void stopVac(){
 
 unsigned long secToMillis(unsigned long seconds){
   return(seconds * 60000);
-}  
+}
 
 int read_LCD_buttons() {
   adc_key_in = analogRead(0);
