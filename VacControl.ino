@@ -4,14 +4,23 @@
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 //Vales used by the LCD
-int lcd_key     = 0;
-int adc_key_in  = 0;
-#define btnRIGHT  0
-#define btnUP     1
-#define btnDOWN   2
-#define btnLEFT   3
-#define btnSELECT 4
-#define btnNONE   5
+int lcd_key     =        0;
+int adc_key_in  =        0;
+#define btnRIGHT         0
+#define btnUP            1
+#define btnDOWN          2
+#define btnLEFT          3
+#define btnSELECT        4
+#define btnNONE          5
+
+//Devices
+#define VAC_ON           255
+#define VAC_OFF          0
+#define VALVE_OPEN       255
+#define VALVE_CLOSED     0
+
+#define PIN_VAC          78
+#define PIN_ATM          82
 
 //Interval for Vacuum / Venting
 int intervalVac =  10;
@@ -23,13 +32,20 @@ unsigned long startMillis = 0;
 bool vac = false;
 bool started = false;
 bool buttonDown = false;
-
 char vacIndicator = 32;
 
 void setup()
 {
-  // Start the library
+  //Start the library
   lcd.begin(16, 2);
+
+  //Set up output pins
+  pinMode(PIN_VAC, OUTPUT);
+  pinMode(PIN_ATM, OUTPUT);
+
+  //Atmospheric state
+  analogWrite(PIN_VAC, VAC_OFF);
+  analogWrite(PIN_ATM, VALVE_OPEN)
 }
 
 void loop()
@@ -176,9 +192,11 @@ void toggleStates(){
 
 //Activate pump, close valve
 void startVac(){
-  //Switch on pump
-
   //Close valve
+  analogWrite(PIN_ATM, VALVE_CLOSED);
+
+  //Switch on pump
+  analogWrite(PIN_VAC, VAC_ON);
 
   //Set trigger point
   nextSwitchMillis = millis() + minToMillis(intervalVac);
@@ -191,8 +209,10 @@ void startVac(){
 //Deactivate pump, open valve
 void stopVac(){
   //Switch off pump
+  analogWrite(PIN_VAC, VAC_OFF);
 
   //Open valve
+  analogWrite(PIN_ATM, VALVE_OPEN);
 
   //Set trigger point
   nextSwitchMillis = millis() + minToMillis(intervalATM);
