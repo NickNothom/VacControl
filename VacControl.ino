@@ -24,6 +24,8 @@ bool vac = false;
 bool started = false;
 bool buttonDown = false;
 
+char vacIndicator = 255;
+
 void setup()
 {
   // Start the library
@@ -54,8 +56,8 @@ void getInput(){
     {
       if (buttonDown)
         return;
-
       buttonDown = true;
+
       intervalATM++;
       break;
     }
@@ -63,8 +65,12 @@ void getInput(){
     {
       if (buttonDown)
         return;
-
       buttonDown = true;
+
+      //Prevent going to -1
+      if (intervalATM == 0)
+        return;
+
       intervalATM--;
       break;
     }
@@ -72,8 +78,8 @@ void getInput(){
     {
       if (buttonDown)
         return;
-
       buttonDown = true;
+
       intervalVac++;
       break;
     }
@@ -81,8 +87,12 @@ void getInput(){
     {
       if (buttonDown)
         return;
-
       buttonDown = true;
+
+      //Prevent going to -1
+      if (intervalVac == 0)
+        return;
+
       intervalVac--;
       break;
     }
@@ -90,9 +100,8 @@ void getInput(){
     {
       if (buttonDown)
         return;
-
-      //Start timer
       buttonDown = true;
+
       start();
       break;
     }
@@ -120,6 +129,14 @@ void redraw(){
   //Draw upper line
   lcd.setCursor(0,0);
   lcd.print("VAC  ATM  TIME");
+
+  //Clear bottom line
+  lcd.setCursor(0,1);
+  lcd.print("                ");
+
+  //Draw vacuum indicator
+  lcd.setCursor(15,0);
+  lcd.print((char)vacIndicator);
 
   //Draw Vac Time
   lcd.setCursor(0,1);
@@ -165,6 +182,9 @@ void startVac(){
 
   //Set trigger point
   nextSwitchMillis = millis() + minToMillis(intervalVac);
+
+  //Set indicator to a caret symbol
+  vacIndicator = 94;
   vac = true;
 }
 
@@ -176,6 +196,10 @@ void stopVac(){
 
   //Set trigger point
   nextSwitchMillis = millis() + minToMillis(intervalATM);
+
+  //Set indicator to a space character
+  vacIndicator = 32;
+
   vac = false;
 }
 
