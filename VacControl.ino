@@ -24,7 +24,7 @@ bool vac = false;
 bool started = false;
 bool buttonDown = false;
 
-char vacIndicator = 255;
+char vacIndicator = 32;
 
 void setup()
 {
