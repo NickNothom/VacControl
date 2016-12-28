@@ -1,5 +1,8 @@
 #include <LiquidCrystal.h>
 
+//Valve on Pin 14
+//Pump on Pin 15
+
 //Pins used on the LCD panel
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
@@ -18,9 +21,6 @@ int adc_key_in  =        0;
 #define VAC_OFF          0
 #define VALVE_OPEN       255
 #define VALVE_CLOSED     0
-
-/*#define PIN_VAC          A15
-#define PIN_ATM          A14*/
 
 //Interval for Vacuum / Venting
 int intervalVac =  10;
