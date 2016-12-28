@@ -137,6 +137,10 @@ void getInput(){
 
 //Render the screen
 void redraw(){
+  //Buffers to store the top and bottom lines
+  char upperBuffer[16];
+  char lowerBuffer[16];
+
   unsigned long currentTimeSeconds = 0;
   //If the timer has not yet started, leave the counter at 0
   if (started)
@@ -146,25 +150,16 @@ void redraw(){
   lcd.setCursor(0,0);
   lcd.print("VAC  ATM  TIME");
 
-  //Clear bottom line
-  lcd.setCursor(0,1);
-  lcd.print("                ");
-
   //Draw vacuum indicator
   lcd.setCursor(15,0);
   lcd.print((char)vacIndicator);
 
-  //Draw Vac Time
+  //Create bottom line
+  sprintf(lowerBuffer, "%3d  %3d  %6d", intervalVac, intervalATM, currentTimeSeconds);
+
+  //Draw lower line
   lcd.setCursor(0,1);
-  lcd.print(intervalVac);
-
-  //Draw ATM Time
-  lcd.setCursor(5,1);
-  lcd.print(intervalATM);
-
-  //Draw timer
-  lcd.setCursor(10,1);
-  lcd.print(currentTimeSeconds);
+  lcd.print(lowerBuffer);
 }
 
 //Start the sequence
